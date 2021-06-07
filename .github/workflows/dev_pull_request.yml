@@ -1,9 +1,9 @@
-name: HalaTodo-API Pull Request
+name: HalaTodo-API Dev Pull Request
 
 on:
   pull_request:
-    types: [opened, reopened]
-    branches: [ master, dev ]
+    types: [ opened, reopened ]
+    branches: [ dev ]
 
 jobs:
   ESLint_Test:
@@ -23,13 +23,15 @@ jobs:
         run: npm install
       - name: ESLint
         run: npm run eslint
+      - name: Build
+        run: npm run build
       - name: Slack Notification on SUCCESS
         if: ${{ success() }}
         uses: tokorom/action-slack-incoming-webhook@main
         env:
             INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
-            text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|API Goods Pre-Check Succeed::${{ env.GITHUB_REF_SLUG }}>*' #Required True 인 값이다..
+            text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|HalaTodo Pre-Check Succeed::${{ env.GITHUB_REF_SLUG }}>*'
             attachments: |
                 [
                   {
@@ -48,7 +50,7 @@ jobs:
         env:
             INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
-            text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|API Goods Pre-Check Failure::${{ env.GITHUB_REF_SLUG }}>*' #Required True 인 값이다..
+            text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|HalaTodo Pre-Check Failure::${{ env.GITHUB_REF_SLUG }}>*'
             attachments: |
                 [
                   {
