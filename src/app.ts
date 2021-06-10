@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
+import router from './router/router';
 
 const app = express();
 
@@ -16,6 +17,8 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+
+app.use(router);
 
 app.listen(3006, () => {
   console.log('server start on 3006');
