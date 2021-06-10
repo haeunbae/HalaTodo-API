@@ -1,8 +1,8 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Request, Response } from 'express';
 
 const router = express.Router();
 
-router.get('/todo/list', (req: Request, res: Response, next: NextFunction) => {
+router.get('/todo/list', (req: Request, res: Response) => {
   try {
     res.status(200).json({ result: 'success getting todo list' });
   } catch (e) {
@@ -10,7 +10,7 @@ router.get('/todo/list', (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-router.get('/todo', (req: Request, res: Response, next: NextFunction) => {
+router.get('/todo', (req: Request, res: Response) => {
   try {
     res.status(200).json({ result: 'success getting todo' });
   } catch (e) {
@@ -18,7 +18,7 @@ router.get('/todo', (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-router.post('/todo', (req: Request, res: Response, next: NextFunction) => {
+router.post('/todo', (req: Request, res: Response) => {
   try {
     res.status(200).json({ result: 'success posting todo list' });
   } catch (e) {
@@ -26,7 +26,7 @@ router.post('/todo', (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-router.put('/todo', (req: Request, res: Response, next: NextFunction) => {
+router.put('/todo', (req: Request, res: Response) => {
   try {
     res.status(200).json({ result: 'success updating todo list' });
   } catch (e) {
@@ -34,7 +34,7 @@ router.put('/todo', (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-router.delete('/todo', (req: Request, res: Response, next: NextFunction) => {
+router.delete('/todo', (req: Request, res: Response) => {
   try {
     res.status(200).json({ result: 'success deleing todo list' });
   } catch (e) {
@@ -42,4 +42,4 @@ router.delete('/todo', (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-export = router;
+export default router;
