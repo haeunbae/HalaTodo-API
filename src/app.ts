@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import router from './router/todo';
+import bodyParser from 'body-parser';
 
 const app = express();
 
@@ -18,6 +19,8 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(router);
 
 app.listen(3006, () => {
