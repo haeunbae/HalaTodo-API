@@ -3,34 +3,34 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 @Entity('todo')
 export class Todo {
   @PrimaryGeneratedColumn('increment', {
-    type: 'number',
+    type: 'int',
     unsigned: true,
   })
   id: number;
 
   @Column({
-    type: 'varchar2',
+    type: 'varchar',
     length: 20,
   })
   user: string;
 
   @Column({
-    type: 'varchar2',
-    length: 45,
+    type: 'varchar',
+    length: 60,
   })
   title: string;
 
   @Column({
-    type: 'varchar2',
-    length: 200,
+    type: 'varchar',
+    length: 400,
   })
   contents: string;
 
   @Column({
-    type: 'boolean',
-    default: false,
+    type: 'tinyint',
+    default: 0,
   })
-  complete: boolean;
+  complete: number;
 
   @Column({
     type: 'datetime',
@@ -44,7 +44,7 @@ export class Todo {
 
   @Column({
     type: 'datetime',
-    default: Date.now(),
+    default: () => "CURRENT_TIMESTAMP"
   })
   createdAt: Date;
 }
