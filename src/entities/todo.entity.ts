@@ -1,5 +1,10 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
+export enum TodoComplete {
+  No = 0,
+  Yes = 1,
+}
+
 @Entity('todo')
 export class Todo {
   @PrimaryGeneratedColumn('increment', {
@@ -28,7 +33,7 @@ export class Todo {
 
   @Column({
     type: 'tinyint',
-    default: 0,
+    default: TodoComplete.No,
   })
   complete: number;
 
@@ -44,7 +49,7 @@ export class Todo {
 
   @Column({
     type: 'datetime',
-    default: () => "CURRENT_TIMESTAMP"
+    default: () => 'CURRENT_TIMESTAMP',
   })
   createdAt: Date;
 }
