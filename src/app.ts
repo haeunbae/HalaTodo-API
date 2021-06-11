@@ -29,6 +29,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(router);
 
+app.set('port', process.env.PORT || 3000);
+
+app.get('/', (req, res) => {
+  res.send('HalaTodo API');
+})
+
 createConnection({
   type: 'mysql',
   host: process.env.DATABASE_HOST,
@@ -41,7 +47,7 @@ createConnection({
   logging: false,
 })
   .then(() => {
-    app.listen(3006, () => {
+    app.listen(app.get('port'), () => {
       console.log('server start on 3006');
     });
   })
