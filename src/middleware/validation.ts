@@ -18,6 +18,10 @@ export const isContentValid = async (
     .notEmpty()
     .run(req);
 
+  await check('startedAt').isISO8601().run(req);
+
+  await check('endedAt').isISO8601().run(req);
+
   if (!validationResult(req).isEmpty()) {
     res.json({
       isSuccess: false,
