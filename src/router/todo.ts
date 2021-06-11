@@ -1,10 +1,15 @@
 import express, { Request, Response } from 'express';
 import { isContentValid, isIdValid } from '../middleware/validation';
+import { getConnection } from 'typeorm';
+import { Todo } from '../entities/todo.entity';
 
 const router = express.Router();
 
-router.get('/todo/list', (req: Request, res: Response) => {
+router.get('/todo/list', async (req: Request, res: Response) => {
   try {
+    const todo = await getConnection().getRepository(Todo).find();
+    console.log(todo);
+
     res.status(200).json({ result: 'success getting todo list' });
   } catch (e) {
     res.status(400).send('error in getting todo list');

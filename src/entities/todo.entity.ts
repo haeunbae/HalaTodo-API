@@ -1,32 +1,55 @@
-// import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-// @Entity({
-//     name: 'todo'
-// })
-// export class Todo {
-//     @PrimaryGeneratedColumn('increment', {
-//         type: 'number',
-//     })
-//     id: number;
+export enum TodoComplete {
+  No = 0,
+  Yes = 1,
+}
 
-//     @Column({
-//         type: 'varchar2'
-//     })
-//     user: string;
+@Entity('todo')
+export class Todo {
+  @PrimaryGeneratedColumn('increment', {
+    type: 'int',
+    unsigned: true,
+  })
+  id: number;
 
-//     @Column({
-//         type: 'varchar2'
-//     })
-//     title: string;
+  @Column({
+    type: 'varchar',
+    length: 20,
+  })
+  user: string;
 
-//     @Column({
-//         type: 'varchar2'
-//     })
-//     contents: string;
+  @Column({
+    type: 'varchar',
+    length: 60,
+  })
+  title: string;
 
-//     @Column({})
-//     startedAt: Date;
+  @Column({
+    type: 'varchar',
+    length: 400,
+  })
+  contents: string;
 
-//     @Column({})
-//     endedAt: Date;
-// }
+  @Column({
+    type: 'tinyint',
+    default: TodoComplete.No,
+  })
+  complete: number;
+
+  @Column({
+    type: 'datetime',
+  })
+  startedAt: Date;
+
+  @Column({
+    type: 'datetime',
+  })
+  endedAt: Date;
+
+  @Column({
+    type: 'datetime',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  createdAt: Date;
+}
