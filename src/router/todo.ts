@@ -1,12 +1,11 @@
 import express, { Request, Response } from 'express';
-import {getConnection} from 'typeorm';
+import { getConnection } from 'typeorm';
 
-import {Todo} from '../entities/todo.entity';
+import { Todo } from '../entities/todo.entity';
 
 const router = express.Router();
 
 router.get('/todo/list', async (req: Request, res: Response) => {
-  
   try {
     const todo = await getConnection().getRepository(Todo).find();
     console.log(todo);
