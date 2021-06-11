@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
+    "deploy": "node ./dist/app.js"
     "eslint": "eslint ./src --fix",
     "start": "nodemon --exec ts-node src/app.ts"
   },
