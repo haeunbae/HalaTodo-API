@@ -16,8 +16,9 @@ export class Todo {
   @Column({
     type: 'varchar',
     length: 20,
+    nullable: true
   })
-  user: string;
+  user?: string;
 
   @Column({
     type: 'varchar',
