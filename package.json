@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "deploy": "node ./dist/app.js"
-    "eslint": "eslint ./src --fix",
+    "deploy": "node ./dist/app.js",
+    "eslint": "eslint ./src",
     "start": "nodemon --exec ts-node src/app.ts"
   },
   "author": "",
