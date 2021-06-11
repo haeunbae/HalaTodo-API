@@ -37,12 +37,17 @@ router.post('/todo', isContentValid, async (req: Request, res: Response) => {
   const { title, contents, startedAt, endedAt } = req.body;
 
   try {
-    await getConnection().createQueryBuilder().insert().into(Todo).values({
-      title,
-      contents,
-      startedAt,
-      endedAt,
-    }).execute();
+    await getConnection()
+      .createQueryBuilder()
+      .insert()
+      .into(Todo)
+      .values({
+        title,
+        contents,
+        startedAt,
+        endedAt,
+      })
+      .execute();
 
     res.status(200).json({ result: 'success posting todo list' });
   } catch (e) {
@@ -62,7 +67,7 @@ router.put(
         .createQueryBuilder()
         .update(Todo)
         .set({
-          ...arg
+          ...arg,
         })
         .where('id = :id', { id })
         .execute();
@@ -82,7 +87,8 @@ router.delete('/todo', isIdValid, async (req: Request, res: Response) => {
       .createQueryBuilder()
       .delete()
       .from(Todo)
-      .where('id = :id', { id }).execute();
+      .where('id = :id', { id })
+      .execute();
 
     res.status(200).json({ result: 'success deleting todo list' });
   } catch (e) {
