@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
+import { isContentValid, isIdValid } from '../middleware/validation';
 import { getConnection } from 'typeorm';
-
 import { Todo } from '../entities/todo.entity';
 
 const router = express.Router();
@@ -16,7 +16,7 @@ router.get('/todo/list', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/todo', (req: Request, res: Response) => {
+router.get('/todo', isIdValid, (req: Request, res: Response) => {
   try {
     res.status(200).json({ result: 'success getting todo' });
   } catch (e) {
@@ -24,7 +24,7 @@ router.get('/todo', (req: Request, res: Response) => {
   }
 });
 
-router.post('/todo', (req: Request, res: Response) => {
+router.post('/todo', isContentValid, (req: Request, res: Response) => {
   try {
     res.status(200).json({ result: 'success posting todo list' });
   } catch (e) {
@@ -32,17 +32,22 @@ router.post('/todo', (req: Request, res: Response) => {
   }
 });
 
-router.put('/todo', (req: Request, res: Response) => {
-  try {
-    res.status(200).json({ result: 'success updating todo list' });
-  } catch (e) {
-    res.status(400).send('error in updating todo list');
+router.put(
+  '/todo',
+  isIdValid,
+  isContentValid,
+  (req: Request, res: Response) => {
+    try {
+      res.status(200).json({ result: 'success updating todo list' });
+    } catch (e) {
+      res.status(400).send('error in updating todo list');
+    }
   }
-});
+);
 
-router.delete('/todo', (req: Request, res: Response) => {
+router.delete('/todo', isIdValid, (req: Request, res: Response) => {
   try {
-    res.status(200).json({ result: 'success deleing todo list' });
+    res.status(200).json({ result: 'success deleting todo list' });
   } catch (e) {
     res.status(400).send('error in deleting todo list');
   }
