@@ -1,32 +1,36 @@
-import { check, validationResult } from 'express-validator';
 import { Request, Response, NextFunction } from 'express';
+import { check, validationResult } from 'express-validator';
 
 export const isContentValid = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  await check('title')
-    .isLength({ min: 1, max: 60 })
-    .isString()
-    .notEmpty()
+  await check('title').isLength({ max: 60 }).isString().notEmpty().run(req);
+
+  await check('contents').isLength({ max: 400 }).isString().notEmpty().run(req);
+
+  await check('startedAt')
+    .isISO8601()
+    .isBefore(req.body.endedAt)
+    .withMessage('Start date have invalid format or cannot be before end date')
     .run(req);
 
-  await check('contents')
-    .isLength({ min: 1, max: 400 })
-    .isString()
-    .notEmpty()
+  await check('endedAt')
+    .isISO8601()
+    .isAfter(req.body.startedAt)
+    .withMessage('End date have invalid format or cannot be after start date')
     .run(req);
 
-  await check('startedAt').isISO8601().run(req);
+  const errors = validationResult(req);
 
-  await check('endedAt').isISO8601().run(req);
-
-  if (!validationResult(req).isEmpty()) {
+  if (!errors.isEmpty()) {
     res.json({
       isSuccess: false,
-      message: 'content Error',
+      message: 'Invalid parameter',
+      errors: errors.array(),
     });
+
     return;
   }
 
@@ -40,11 +44,65 @@ export const isIdValid = async (
 ) => {
   await check('id').isNumeric().notEmpty().run(req);
 
+  const errors = validationResult(req);
+
   if (!validationResult(req).isEmpty()) {
     res.json({
       isSuccess: false,
       message: 'Id Error',
+      errors: errors.array(),
     });
+
+    return;
+  }
+
+  next();
+};
+
+export const isUpdateParamValid = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const titleChk = check('title')
+    .optional()
+    .isLength({ max: 60 })
+    .isString()
+    .notEmpty()
+    .run(req);
+
+  const contentsChk = check('contents')
+    .optional()
+    .isLength({ max: 400 })
+    .isString()
+    .notEmpty()
+    .run(req);
+
+  const startedAtChk = check('startedAt')
+    .optional()
+    .isISO8601()
+    .isBefore(req.body.endedAt)
+    .withMessage('Start date have invalid format or cannot be before end date')
+    .run(req);
+
+  const endedAtChk = check('endedAt')
+    .optional()
+    .isISO8601()
+    .isAfter(req.body.startedAt)
+    .withMessage('End date have invalid format or cannot be after start date')
+    .run(req);
+
+  await Promise.all([titleChk, contentsChk, startedAtChk, endedAtChk]);
+
+  const errors = validationResult(req);
+
+  if (!validationResult(req).isEmpty()) {
+    res.json({
+      isSuccess: false,
+      message: 'Update parameter Error',
+      errors: errors.array(),
+    });
+
     return;
   }
 

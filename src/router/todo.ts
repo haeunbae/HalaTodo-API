@@ -1,17 +1,21 @@
 import express, { Request, Response } from 'express';
-import { isContentValid, isIdValid } from '../middleware/validation';
+import {
+  isContentValid,
+  isIdValid,
+  isUpdateParamValid,
+} from '../middleware/validation';
 import { getConnection } from 'typeorm';
 import { Todo } from '../entities/todo.entity';
 
 const router = express.Router();
 
 router.get('/todo/list', async (req: Request, res: Response) => {
-  const { skip, take = 10 } = req.query;
+  const { skip = 0, take = 10 } = req.query;
 
   try {
     const todo = await getConnection()
       .getRepository(Todo)
-      .find({ skip: 0, take: 10 });
+      .find({ skip: Number(skip), take: Number(take) });
 
     res.status(200).json({ result: todo });
   } catch (e) {
@@ -58,7 +62,7 @@ router.post('/todo', isContentValid, async (req: Request, res: Response) => {
 router.put(
   '/todo',
   isIdValid,
-  // isContentValid,
+  isUpdateParamValid,
   async (req: Request, res: Response) => {
     const { id, ...arg } = req.body;
 

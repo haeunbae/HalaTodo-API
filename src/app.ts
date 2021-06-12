@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
+import https from 'https';
 import { createConnection } from 'typeorm';
 import 'reflect-metadata';
 
@@ -40,6 +41,12 @@ createConnection({
 })
   .then(() => {
     console.log('Database Connected!');
+
+    if (process.env.NODE_ENV === 'production') {
+      setInterval(() => {
+        https.get('https://hala-todo.herokuapp.com');
+      }, 1200000);
+    }
 
     app.listen(app.get('port'), () => {
       console.log(`Server start on ${app.get('port')}`);
