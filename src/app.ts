@@ -15,25 +15,17 @@ const app = express();
 //morgan
 app.use(morgan('dev'));
 
-//cors
-const corsOptions = {
-  origin(origin: any, callback: any) {
-    callback(null, true);
-  },
-  credentials: true,
-};
-
-app.use(cors(corsOptions));
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(router);
 
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 3006);
 
 app.get('/', (req, res) => {
   res.send('HalaTodo API');
-})
+});
 
 createConnection({
   type: 'mysql',
@@ -47,8 +39,10 @@ createConnection({
   logging: false,
 })
   .then(() => {
+    console.log('Database Connected!');
+
     app.listen(app.get('port'), () => {
-      console.log('server start on 3006');
+      console.log(`Server start on ${app.get('port')}`);
     });
   })
   .catch((err) => {
