@@ -8,7 +8,28 @@ import { getConnection } from 'typeorm';
 import { Todo } from '../entities/todo.entity';
 
 const router = express.Router();
-
+/**
+ *  @swagger
+ *  tags:
+ *    name: Todo list
+ *    description: API to manage Todolist.
+ */
+/**
+ * @swagger
+ *  paths:
+ *  /todo/list:
+ *    get:
+ *      tags: [todo]
+ *      description: 모든 todo list 조회
+ *      produces:
+ *      - application/json
+ *      parameters:
+ *      responses:
+ *       "200":
+ *        description:  성공
+ *      schema:
+ *        $ref: '#/components/schemas/Todo'
+ */
 router.get('/todo/list', async (req: Request, res: Response) => {
   const { skip = 0, take = 10 } = req.query;
 
