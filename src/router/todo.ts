@@ -67,7 +67,7 @@ router.put(
         .createQueryBuilder()
         .update(Todo)
         .set({
-          ...arg
+          ...arg,
         })
         .where('id = :id', { id })
         .execute();
