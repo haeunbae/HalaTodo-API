@@ -23,8 +23,9 @@ export class Todo {
   @Column({
     type: 'varchar',
     length: 60,
+    nullable: true,
   })
-  title: string;
+  title?: string;
 
   @Column({
     type: 'varchar',

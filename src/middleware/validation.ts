@@ -6,7 +6,12 @@ export const isContentValid = async (
   res: Response,
   next: NextFunction
 ) => {
-  await check('title').isLength({ max: 60 }).isString().notEmpty().run(req);
+  await check('title')
+    .optional()
+    .isLength({ max: 60 })
+    .isString()
+    .notEmpty()
+    .run(req);
 
   await check('contents').isLength({ max: 400 }).isString().notEmpty().run(req);
 
@@ -46,7 +51,7 @@ export const isIdValid = async (
 
   const errors = validationResult(req);
 
-  if (!validationResult(req).isEmpty()) {
+  if (!errors.isEmpty()) {
     res.json({
       isSuccess: false,
       message: 'Id Error',
@@ -96,10 +101,35 @@ export const isUpdateParamValid = async (
 
   const errors = validationResult(req);
 
-  if (!validationResult(req).isEmpty()) {
+  if (!errors.isEmpty()) {
     res.json({
       isSuccess: false,
       message: 'Update parameter Error',
+      errors: errors.array(),
+    });
+
+    return;
+  }
+
+  next();
+};
+
+export const isCompleteParamValid = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  await check('complete')
+    .isIn([0, 1])
+    .withMessage('invalid parameter')
+    .run(req);
+
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    res.json({
+      isSuccess: false,
+      message: 'Complete parameter Error',
       errors: errors.array(),
     });
 
