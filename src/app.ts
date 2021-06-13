@@ -32,7 +32,6 @@ app.get('/', (req, res) => {
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
-
 createConnection({
   type: 'mysql',
   host: process.env.DATABASE_HOST,

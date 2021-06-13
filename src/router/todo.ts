@@ -8,27 +8,20 @@ import { getConnection } from 'typeorm';
 import { Todo } from '../entities/todo.entity';
 
 const router = express.Router();
-/**
- *  @swagger
- *  tags:
- *    name: Todo list
- *    description: API to manage Todolist.
- */
+
 /**
  * @swagger
  *  paths:
  *  /todo/list:
  *    get:
- *      tags: [todo]
  *      description: 모든 todo list 조회
- *      produces:
- *      - application/json
- *      parameters:
  *      responses:
  *       "200":
  *        description:  성공
- *      schema:
- *        $ref: '#/components/schemas/Todo'
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Todo'
  */
 router.get('/todo/list', async (req: Request, res: Response) => {
   const { skip = 0, take = 10 } = req.query;
@@ -43,7 +36,20 @@ router.get('/todo/list', async (req: Request, res: Response) => {
     res.status(400).send('error in getting todo list');
   }
 });
-
+/**
+ * @swagger
+ *  paths:
+ *  /todo:
+ *    get:
+ *      description: todo  조회
+ *      responses:
+ *       "200":
+ *        description:  성공
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Todo'
+ */
 router.get('/todo', isIdValid, async (req: Request, res: Response) => {
   const { id } = req.query;
 
@@ -57,7 +63,43 @@ router.get('/todo', isIdValid, async (req: Request, res: Response) => {
     res.status(400).send('error in getting todo');
   }
 });
-
+/**
+ * @swagger
+ *  paths:
+ *  /todo:
+ *    post:
+ *      description: todo 입력
+ *      parameters:
+ *        - name: title
+ *          description: todo 제목
+ *          required: true
+ *          type: string
+ *        - name: contents
+ *          required: true
+ *          description: todo 내용
+ *          type: string
+ *        - name: startedAt
+ *          required: true
+ *          description: todo 시작
+ *          type: string
+ *        - name: endedAt
+ *          required: true
+ *          description: todo 종료
+ *          type: string
+ *      responses:
+ *       "200":
+ *        description:  성공
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Todo'
+ *        "400":
+ *          description: "잘못된 데이터"
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/Todo'
+ */
 router.post('/todo', isContentValid, async (req: Request, res: Response) => {
   const { title, contents, startedAt, endedAt } = req.body;
 
