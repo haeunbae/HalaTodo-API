@@ -144,6 +144,53 @@ router.post('/', isContentValid, async (req: Request, res: Response) => {
   }
 });
 
+/**
+ * @swagger
+ *  paths:
+ *  /todo:
+ *    put:
+ *      description: todo 내용수정
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                id:
+ *                  type: number
+ *                complete:
+ *                  type: number
+ *                  default: 0
+ *                contents:
+ *                  type: string
+ *                  default: Swagger contents
+ *                startedAt:
+ *                  type: string
+ *                  default: 2021-06-02T16:26:02.000Z
+ *                endedAt:
+ *                  type: string
+ *                  default: 2021-06-10T16:26:02.000Z
+ *      responses:
+ *       "200":
+ *        description:  성공
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  default: Success updating todo list
+ *       "400":
+ *         description: 잘못된 데이터
+ *         content:
+ *           application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  default: Error in updating todo list
+ */
 router.put(
   '/',
   isIdValid,
@@ -230,6 +277,38 @@ router.put(
   }
 );
 
+/**
+ * @swagger
+ *  paths:
+ *  /todo:
+ *    delete:
+ *      description: todo 삭제
+ *      parameters :
+ *        - in: query
+ *          name: id
+ *          required: true
+ *          schema:
+ *          type: integer
+ *      responses:
+ *       "200":
+ *        description:  성공
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  default: Success deleting todo list
+ *       "400":
+ *         description: 잘못된 데이터
+ *         content:
+ *           application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  default: Error in deleting todo list
+ */
 router.delete('/', isIdValid, async (req: Request, res: Response) => {
   const { id } = req.query;
 
