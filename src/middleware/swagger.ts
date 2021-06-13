@@ -8,7 +8,14 @@ const options = {
       version: '1.0.0',
       description: 'Test API with express',
     },
-    servers: [{ url: 'http://localhost:3006' }],
+    servers: [
+      {
+        url:
+          process.env.NODE_ENV === 'production'
+            ? 'https://hala-todo.herokuapp.com/'
+            : 'http://localhost:3006',
+      },
+    ],
   },
   apis: ['./src/router/*.*', './src/swagger/*'],
 };

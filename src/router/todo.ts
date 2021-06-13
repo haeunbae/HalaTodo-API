@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import {
+  isCompleteParamValid,
   isContentValid,
   isIdValid,
   isUpdateParamValid,
@@ -17,13 +18,20 @@ const router = express.Router();
  *      description: 모든 todo list 조회
  *      responses:
  *       "200":
- *        description:  성공
+ *        description: 성공
  *        content:
  *          application/json:
  *            schema:
  *              $ref: '#/components/schemas/Todo'
+ *       "400":
+ *         description: 잘못된 데이터
+ *         content:
+ *           application/json:
+ *            schema:
+ *              type: string
+ *              default: error in getting todo list
  */
-router.get('/todo/list', async (req: Request, res: Response) => {
+router.get('/list', async (req: Request, res: Response) => {
   const { skip = 0, take = 10 } = req.query;
 
   try {
@@ -42,15 +50,28 @@ router.get('/todo/list', async (req: Request, res: Response) => {
  *  /todo:
  *    get:
  *      description: todo  조회
+ *      parameters:
+ *        - name: id
+ *          in: query
+ *          description: todo Id
+ *          required: true
+ *          type: number
  *      responses:
  *       "200":
- *        description:  성공
+ *        description: 성공
  *        content:
  *          application/json:
  *            schema:
  *              $ref: '#/components/schemas/Todo'
+ *       "400":
+ *         description: 잘못된 데이터
+ *         content:
+ *           application/json:
+ *            schema:
+ *              type: string
+ *              default: error in getting todo
  */
-router.get('/todo', isIdValid, async (req: Request, res: Response) => {
+router.get('/', isIdValid, async (req: Request, res: Response) => {
   const { id } = req.query;
 
   try {
@@ -69,38 +90,39 @@ router.get('/todo', isIdValid, async (req: Request, res: Response) => {
  *  /todo:
  *    post:
  *      description: todo 입력
- *      parameters:
- *        - name: title
- *          description: todo 제목
- *          required: true
- *          type: string
- *        - name: contents
- *          required: true
- *          description: todo 내용
- *          type: string
- *        - name: startedAt
- *          required: true
- *          description: todo 시작
- *          type: string
- *        - name: endedAt
- *          required: true
- *          description: todo 종료
- *          type: string
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                contents:
+ *                  type: string
+ *                  default: Swagger contents
+ *                startedAt:
+ *                  type: string
+ *                  default: 2021-06-02T16:26:02.000Z
+ *                endedAt:
+ *                  type: string
+ *                  default: 2021-06-10T16:26:02.000Z
  *      responses:
  *       "200":
  *        description:  성공
  *        content:
  *          application/json:
+ *           schema:
+ *              type: string
+ *              default: success posting todo list
+ *       "400":
+ *         description: 잘못된 데이터
+ *         content:
+ *           application/json:
  *            schema:
- *              $ref: '#/components/schemas/Todo'
- *        "400":
- *          description: "잘못된 데이터"
- *          content:
- *            application/json:
- *              schema:
- *                $ref: '#/components/schemas/Todo'
+ *              type: string
+ *              default: error in posting todo list
  */
-router.post('/todo', isContentValid, async (req: Request, res: Response) => {
+router.post('/', isContentValid, async (req: Request, res: Response) => {
   const { title, contents, startedAt, endedAt } = req.body;
 
   try {
@@ -116,14 +138,14 @@ router.post('/todo', isContentValid, async (req: Request, res: Response) => {
       })
       .execute();
 
-    res.status(200).json({ result: 'success posting todo list' });
+    res.status(200).send('success posting todo list');
   } catch (e) {
     res.status(400).send('error in posting todo list');
   }
 });
 
 router.put(
-  '/todo',
+  '/',
   isIdValid,
   isUpdateParamValid,
   async (req: Request, res: Response) => {
@@ -146,7 +168,69 @@ router.put(
   }
 );
 
-router.delete('/todo', isIdValid, async (req: Request, res: Response) => {
+/**
+ * @swagger
+ *  paths:
+ *  /todo/complete:
+ *    put:
+ *      description: todo 완료/미완료
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                id:
+ *                  type: number
+ *                complete:
+ *                  type: number
+ *                  default: 1
+ *      responses:
+ *       "200":
+ *        description:  성공
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  default: Success updating todo list
+ *       "400":
+ *         description: 잘못된 데이터
+ *         content:
+ *           application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  default: Error in updating todo list
+ */
+router.put(
+  '/complete',
+  isIdValid,
+  isCompleteParamValid,
+  async (req: Request, res: Response) => {
+    const { id, complete } = req.body;
+
+    try {
+      await getConnection()
+        .createQueryBuilder()
+        .update(Todo)
+        .set({
+          complete,
+        })
+        .where('id = :id', { id })
+        .execute();
+
+      res.status(200).json({ message: 'Success updating todo list' });
+    } catch (err) {
+      res.status(400).send('Error in updating todo list');
+    }
+  }
+);
+
+router.delete('/', isIdValid, async (req: Request, res: Response) => {
   const { id } = req.query;
 
   try {
