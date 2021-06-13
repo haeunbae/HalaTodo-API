@@ -1,0 +1,28 @@
+components:
+  schemas:
+    Todo:
+      properties:
+        id:
+          type: integer
+          description: todo Id
+        title:
+          type: string
+          description: todo 제목
+        user:
+          type: string
+          description: todo 작성자
+        contents:
+          type: string
+          description: todo 내용
+        complete:
+          type: integer
+          description: todo 완료여부
+        startedAt:
+          type: dateTime
+          description: todo 시작시간
+        endedAt:
+          type: dateTime
+          description: todo 완료시간
+        createdAd:
+          type: dateTime
+          description: todo 작성시간
