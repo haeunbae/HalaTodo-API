@@ -8,6 +8,8 @@ import 'reflect-metadata';
 
 import router from './router/todo';
 import { Todo } from './entities/todo.entity';
+import swaggerUi from 'swagger-ui-express';
+import specs from './middleware/swagger';
 
 dotenv.config();
 
@@ -27,6 +29,8 @@ app.set('port', process.env.PORT || 3006);
 app.get('/', (req, res) => {
   res.send('HalaTodo API');
 });
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 createConnection({
   type: 'mysql',
